@@ -108,6 +108,42 @@ static CURLcode setstropt_userpwd(char *option, char **userp, char **passwdp)
   return result;
 }
 
+void debugPrintLong(struct Curl_easy *data, char* option,
+                      long param)
+{
+    char print_buffer[2048 + 1];
+    print_buffer[2048] = 0;
+    snprintf(print_buffer, sizeof(print_buffer), "setopt(%s, %d)\n", option, param);
+    Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
+}
+
+void debugPrintStr(struct Curl_easy *data, char* option,
+                      char* param)
+{
+    char print_buffer[2048 + 1];
+    print_buffer[2048] = 0;
+    snprintf(print_buffer, sizeof(print_buffer), "setopt(%s, %s)\n", option, param);
+    Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
+}
+
+void debugPrintObj(struct Curl_easy *data, char* option,
+                      void* param)
+{
+    char print_buffer[2048 + 1];
+    print_buffer[2048] = 0;
+    snprintf(print_buffer, sizeof(print_buffer), "setopt(%s, %p)\n", option, param);
+    Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
+}
+
+void debugPrintOffT(struct Curl_easy *data, char* option,
+                       curl_off_t param)
+{
+    char print_buffer[2048 + 1];
+    print_buffer[2048] = 0;
+    snprintf(print_buffer, sizeof(print_buffer), "setopt(%s, %p)\n", option, param);
+    Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
+}
+
 #define C_SSLVERSION_VALUE(x) (x & 0xffff)
 #define C_SSLVERSION_MAX_VALUE(x) (x & 0xffff0000)
 

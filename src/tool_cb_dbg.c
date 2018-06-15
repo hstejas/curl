@@ -127,6 +127,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
       traced_data = FALSE;
       break;
     case CURLINFO_TEXT:
+    case CURLINFO_OPTIONS:
     case CURLINFO_HEADER_IN:
       if(!newl)
         fprintf(output, "%s%s ", timebuf, s_infotype[type]);
@@ -186,6 +187,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
 
   switch(type) {
   case CURLINFO_TEXT:
+  case CURLINFO_OPTIONS:
     fprintf(output, "%s== Info: %s", timebuf, data);
     /* FALLTHROUGH */
   default: /* in case a new one is introduced to shock us */
