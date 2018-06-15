@@ -814,6 +814,7 @@ int Curl_debug(struct Curl_easy *data, curl_infotype type,
   else {
     switch(type) {
     case CURLINFO_TEXT:
+    case CURLINFO_OPTIONS:
     case CURLINFO_HEADER_OUT:
     case CURLINFO_HEADER_IN:
       fwrite(s_infotype[type], 2, 1, data->set.err);
