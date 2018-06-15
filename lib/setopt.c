@@ -108,7 +108,7 @@ static CURLcode setstropt_userpwd(char *option, char **userp, char **passwdp)
   return result;
 }
 
-void debugPrintLong(struct Curl_easy *data, char* option,
+static void debugPrintLong(struct Curl_easy *data, const char* option,
                       long param)
 {
     char print_buffer[2048 + 1];
@@ -117,7 +117,7 @@ void debugPrintLong(struct Curl_easy *data, char* option,
     Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
 }
 
-void debugPrintStr(struct Curl_easy *data, char* option,
+static void debugPrintStr(struct Curl_easy *data, const char* option,
                       char* param)
 {
     char print_buffer[2048 + 1];
@@ -126,7 +126,7 @@ void debugPrintStr(struct Curl_easy *data, char* option,
     Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
 }
 
-void debugPrintObj(struct Curl_easy *data, char* option,
+static void debugPrintObj(struct Curl_easy *data, const char* option,
                       void* param)
 {
     char print_buffer[2048 + 1];
@@ -135,7 +135,7 @@ void debugPrintObj(struct Curl_easy *data, char* option,
     Curl_debug(data, CURLINFO_OPTIONS, print_buffer, strlen(print_buffer));
 }
 
-void debugPrintOffT(struct Curl_easy *data, char* option,
+static void debugPrintOffT(struct Curl_easy *data, const char* option,
                        curl_off_t param)
 {
     char print_buffer[2048 + 1];
@@ -153,10 +153,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
   char *argptr;
   CURLcode result = CURLE_OK;
   long arg;
-  curl_off_t bigsize;
 
   switch(option) {
   case CURLOPT_DNS_CACHE_TIMEOUT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_DNS_CACHE_TIMEOUT", param_in);
 
@@ -165,7 +165,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.dns_cache_timeout = arg;
     break;
+  }
   case CURLOPT_DNS_USE_GLOBAL_CACHE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_DNS_USE_GLOBAL_CACHE", param_in);
 
@@ -173,7 +175,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     arg = param_in;
     data->set.global_dns_cache = (0 != arg) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_SSL_CIPHER_LIST:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSL_CIPHER_LIST", param_in);
 
@@ -181,7 +185,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_CIPHER_LIST_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_SSL_CIPHER_LIST:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_SSL_CIPHER_LIST", param_in);
 
@@ -189,8 +195,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_CIPHER_LIST_PROXY],
                             param_in);
     break;
+  }
 
   case CURLOPT_TLS13_CIPHERS:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_TLS13_CIPHERS", param_in);
 
@@ -202,7 +210,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       return CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_PROXY_TLS13_CIPHERS:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_TLS13_CIPHERS", param_in);
 
@@ -214,8 +224,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       return CURLE_NOT_BUILT_IN;
     break;
+  }
 
   case CURLOPT_RANDOM_FILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_RANDOM_FILE", param_in);
 
@@ -226,7 +238,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_RANDOM_FILE],
                             param_in);
     break;
+  }
   case CURLOPT_EGDSOCKET:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_EGDSOCKET", param_in);
 
@@ -236,7 +250,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_EGDSOCKET],
                             param_in);
     break;
+  }
   case CURLOPT_MAXCONNECTS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_MAXCONNECTS", param_in);
 
@@ -249,7 +265,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.maxconnects = arg;
     break;
+  }
   case CURLOPT_FORBID_REUSE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FORBID_REUSE", param_in);
 
@@ -259,7 +277,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.reuse_forbid = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_FRESH_CONNECT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FRESH_CONNECT", param_in);
 
@@ -269,7 +289,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.reuse_fresh = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_VERBOSE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_VERBOSE", param_in);
 
@@ -279,7 +301,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.verbose = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_HEADER:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HEADER", param_in);
 
@@ -288,7 +312,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.include_header = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_NOPROGRESS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_NOPROGRESS", param_in);
 
@@ -301,7 +327,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->progress.flags &= ~PGRS_HIDE;
     break;
+  }
   case CURLOPT_NOBODY:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_NOBODY", param_in);
 
@@ -310,7 +338,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.opt_no_body = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_FAILONERROR:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FAILONERROR", param_in);
 
@@ -320,19 +350,21 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.http_fail_on_error = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_KEEP_SENDING_ON_ERROR:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_KEEP_SENDING_ON_ERROR", param_in);
 
     data->set.http_keep_sending_on_error = (0 != param_in) ?
       TRUE : FALSE;
     break;
+  }
   case CURLOPT_UPLOAD:
+  case CURLOPT_PUT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_UPLOAD", param_in);
-
-  case CURLOPT_PUT:
-    long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PUT", param_in);
 
     /*
@@ -350,14 +382,18 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
          then this can be changed to HEAD later on) */
       data->set.httpreq = HTTPREQ_GET;
     break;
+  }
   case CURLOPT_REQUEST_TARGET:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_REQUEST_TARGET", param_in);
 
     result = Curl_setstropt(&data->set.str[STRING_TARGET],
                             param_in);
     break;
+  }
   case CURLOPT_FILETIME:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FILETIME", param_in);
 
@@ -367,7 +403,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.get_filetime = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_FTP_CREATE_MISSING_DIRS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_CREATE_MISSING_DIRS", param_in);
 
@@ -391,18 +429,23 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       break;
     }
     break;
+  }
   case CURLOPT_SERVER_RESPONSE_TIMEOUT:
+  {
+    long param_in = va_arg(param, long);
+    debugPrintLong(data, "CURLOPT_SERVER_RESPONSE_TIMEOUT", param_in);
     /*
      * Option that specifies how quickly an server response must be obtained
      * before it is considered failure. For pingpong protocols.
      */
-    arg = param_in;
-    if((arg >= 0) && (arg <= (INT_MAX/1000)))
-      data->set.server_response_timeout = arg * 1000;
+    if((param_in >= 0) && (param_in <= (INT_MAX/1000)))
+      data->set.server_response_timeout = param_in * 1000;
     else
       return CURLE_BAD_FUNCTION_ARGUMENT;
     break;
+  }
   case CURLOPT_TFTP_NO_OPTIONS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TFTP_NO_OPTIONS", param_in);
 
@@ -412,7 +455,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.tftp_no_options = param_in != 0;
     break;
+  }
   case CURLOPT_TFTP_BLKSIZE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TFTP_BLKSIZE", param_in);
 
@@ -424,7 +469,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.tftp_blksize = arg;
     break;
+  }
   case CURLOPT_DIRLISTONLY:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_DIRLISTONLY", param_in);
 
@@ -434,7 +481,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ftp_list_only = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_APPEND:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_APPEND", param_in);
 
@@ -443,7 +492,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ftp_append = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_FTP_FILEMETHOD:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_FILEMETHOD", param_in);
 
@@ -455,7 +506,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.ftp_filemethod = (curl_ftpfile)arg;
     break;
+  }
   case CURLOPT_NETRC:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_NETRC", param_in);
 
@@ -467,7 +520,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.use_netrc = (enum CURL_NETRC_OPTION)arg;
     break;
+  }
   case CURLOPT_NETRC_FILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_NETRC_FILE", param_in);
 
@@ -477,7 +532,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_NETRC_FILE],
                             param_in);
     break;
+  }
   case CURLOPT_TRANSFERTEXT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TRANSFERTEXT", param_in);
 
@@ -489,7 +546,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.prefer_ascii = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_TIMECONDITION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TIMECONDITION", param_in);
 
@@ -502,7 +561,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.timecondition = (curl_TimeCond)arg;
     break;
+  }
   case CURLOPT_TIMEVALUE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TIMEVALUE", param_in);
 
@@ -512,9 +573,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.timevalue = (time_t)param_in;
     break;
+  }
 
   case CURLOPT_TIMEVALUE_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_TIMEVALUE_LARGE", param_in);
 
     /*
@@ -523,13 +586,13 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.timevalue = (time_t)param_in;
     break;
+  }
 
   case CURLOPT_SSLVERSION:
+  case CURLOPT_PROXY_SSLVERSION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSLVERSION", param_in);
-
-  case CURLOPT_PROXY_SSLVERSION:
-    long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXY_SSLVERSION", param_in);
 
     /*
@@ -561,9 +624,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = CURLE_UNKNOWN_OPTION;
 #endif
     break;
+  }
 
 #ifndef CURL_DISABLE_HTTP
   case CURLOPT_AUTOREFERER:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_AUTOREFERER", param_in);
 
@@ -572,8 +637,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.http_auto_referer = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_ACCEPT_ENCODING:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_ACCEPT_ENCODING", param_in);
 
@@ -599,16 +666,20 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       result = Curl_setstropt(&data->set.str[STRING_ENCODING], argptr);
     break;
+  }
 
   case CURLOPT_TRANSFER_ENCODING:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TRANSFER_ENCODING", param_in);
 
     data->set.http_transfer_encoding = (0 != param_in) ?
       TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FOLLOWLOCATION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FOLLOWLOCATION", param_in);
 
@@ -617,8 +688,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.http_follow_location = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_UNRESTRICTED_AUTH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_UNRESTRICTED_AUTH", param_in);
 
@@ -629,8 +702,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.allow_auth_to_other_hosts =
       (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_MAXREDIRS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_MAXREDIRS", param_in);
 
@@ -643,8 +718,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.maxredirs = arg;
     break;
+  }
 
   case CURLOPT_POSTREDIR:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_POSTREDIR", param_in);
 
@@ -664,8 +741,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.keep_post = arg & CURL_REDIR_POST_ALL;
     break;
+  }
 
   case CURLOPT_POST:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_POST", param_in);
 
@@ -679,8 +758,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->set.httpreq = HTTPREQ_GET;
     break;
+  }
 
   case CURLOPT_COPYPOSTFIELDS:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_COPYPOSTFIELDS", param_in);
 
@@ -729,8 +810,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.postfields = data->set.str[STRING_COPYPOSTFIELDS];
     data->set.httpreq = HTTPREQ_POST;
     break;
+  }
 
   case CURLOPT_POSTFIELDS:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_POSTFIELDS", param_in);
 
@@ -742,8 +825,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     (void) Curl_setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
     data->set.httpreq = HTTPREQ_POST;
     break;
+  }
 
   case CURLOPT_POSTFIELDSIZE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_POSTFIELDSIZE", param_in);
 
@@ -751,43 +836,45 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      * The size of the POSTFIELD data to prevent libcurl to do strlen() to
      * figure it out. Enables binary posts.
      */
-    bigsize = param_in;
-    if(bigsize < -1)
+    if(param_in < -1)
       return CURLE_BAD_FUNCTION_ARGUMENT;
 
-    if(data->set.postfieldsize < bigsize &&
+    if(data->set.postfieldsize < param_in &&
        data->set.postfields == data->set.str[STRING_COPYPOSTFIELDS]) {
       /* Previous CURLOPT_COPYPOSTFIELDS is no longer valid. */
       (void) Curl_setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
       data->set.postfields = NULL;
     }
 
-    data->set.postfieldsize = bigsize;
+    data->set.postfieldsize = param_in;
     break;
+  }
 
   case CURLOPT_POSTFIELDSIZE_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_POSTFIELDSIZE_LARGE", param_in);
 
     /*
      * The size of the POSTFIELD data to prevent libcurl to do strlen() to
      * figure it out. Enables binary posts.
      */
-    bigsize = param_in;
-    if(bigsize < -1)
+    if(param_in < -1)
       return CURLE_BAD_FUNCTION_ARGUMENT;
 
-    if(data->set.postfieldsize < bigsize &&
+    if(data->set.postfieldsize < param_in &&
        data->set.postfields == data->set.str[STRING_COPYPOSTFIELDS]) {
       /* Previous CURLOPT_COPYPOSTFIELDS is no longer valid. */
       (void) Curl_setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
       data->set.postfields = NULL;
     }
 
-    data->set.postfieldsize = bigsize;
+    data->set.postfieldsize = param_in;
     break;
+  }
 
   case CURLOPT_HTTPPOST:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_HTTPPOST", param_in);
 
@@ -798,9 +885,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.httpreq = HTTPREQ_POST_FORM;
     data->set.opt_no_body = FALSE; /* this is implied */
     break;
+  }
 #endif   /* CURL_DISABLE_HTTP */
 
   case CURLOPT_MIMEPOST:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_MIMEPOST", param_in);
 
@@ -814,8 +903,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       data->set.opt_no_body = FALSE; /* this is implied */
     }
     break;
+  }
 
   case CURLOPT_REFERER:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_REFERER", param_in);
 
@@ -830,8 +921,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
                             param_in);
     data->change.referer = data->set.str[STRING_SET_REFERER];
     break;
+  }
 
   case CURLOPT_USERAGENT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_USERAGENT", param_in);
 
@@ -841,8 +934,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_USERAGENT],
                             param_in);
     break;
+  }
 
   case CURLOPT_HTTPHEADER:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_HTTPHEADER", param_in);
 
@@ -851,9 +946,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.headers = param_in;
     break;
+  }
 
 #ifndef CURL_DISABLE_HTTP
   case CURLOPT_PROXYHEADER:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_PROXYHEADER", param_in);
 
@@ -869,8 +966,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.proxyheaders = param_in;
     break;
+  }
 
   case CURLOPT_HEADEROPT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HEADEROPT", param_in);
 
@@ -880,8 +979,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     arg = param_in;
     data->set.sep_headers = (arg & CURLHEADER_SEPARATE)? TRUE: FALSE;
     break;
+  }
 
   case CURLOPT_HTTP200ALIASES:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_HTTP200ALIASES", param_in);
 
@@ -890,9 +991,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.http200aliases = param_in;
     break;
+  }
 
 #if !defined(CURL_DISABLE_COOKIES)
   case CURLOPT_COOKIE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_COOKIE", param_in);
 
@@ -902,8 +1005,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_COOKIE],
                             param_in);
     break;
+  }
 
   case CURLOPT_COOKIEFILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_COOKIEFILE", param_in);
 
@@ -924,8 +1029,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       data->change.cookielist = cl; /* store the list for later use */
     }
     break;
+  }
 
   case CURLOPT_COOKIEJAR:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_COOKIEJAR", param_in);
 
@@ -948,8 +1055,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->cookies = newcookies;
   }
   break;
+  }
 
   case CURLOPT_COOKIESESSION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_COOKIESESSION", param_in);
 
@@ -970,8 +1079,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.cookiesession = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_COOKIELIST:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_COOKIELIST", param_in);
 
@@ -1030,9 +1141,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     }
 
     break;
+  }
 #endif /* !CURL_DISABLE_COOKIES */
 
   case CURLOPT_HTTPGET:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HTTPGET", param_in);
 
@@ -1045,8 +1158,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       data->set.opt_no_body = FALSE; /* this is implied */
     }
     break;
+  }
 
   case CURLOPT_HTTP_VERSION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HTTP_VERSION", param_in);
 
@@ -1066,8 +1181,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
     data->set.httpversion = arg;
     break;
+  }
 
   case CURLOPT_EXPECT_100_TIMEOUT_MS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_EXPECT_100_TIMEOUT_MS", param_in);
 
@@ -1080,10 +1197,12 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.expect_100_timeout = arg;
     break;
+  }
 
 #endif   /* CURL_DISABLE_HTTP */
 
   case CURLOPT_HTTPAUTH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HTTPAUTH", param_in);
 
@@ -1136,8 +1255,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.httpauth = auth;
   }
   break;
+  }
 
   case CURLOPT_CUSTOMREQUEST:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_CUSTOMREQUEST", param_in);
 
@@ -1152,9 +1273,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
        here, we continue as if we were using the already set type
        and this just changes the actual request keyword */
     break;
+  }
 
 #ifndef CURL_DISABLE_PROXY
   case CURLOPT_HTTPPROXYTUNNEL:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HTTPPROXYTUNNEL", param_in);
 
@@ -1164,8 +1287,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.tunnel_thru_httpproxy = (0 != param_in) ?
       TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_PROXYPORT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXYPORT", param_in);
 
@@ -1177,8 +1302,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.proxyport = arg;
     break;
+  }
 
   case CURLOPT_PROXYAUTH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXYAUTH", param_in);
 
@@ -1230,8 +1357,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.proxyauth = auth;
   }
   break;
+  }
 
   case CURLOPT_PROXY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY", param_in);
 
@@ -1248,8 +1377,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_PROXY],
                             param_in);
     break;
+  }
 
   case CURLOPT_PRE_PROXY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PRE_PROXY", param_in);
 
@@ -1262,8 +1393,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_PRE_PROXY],
                             param_in);
     break;
+  }
 
   case CURLOPT_PROXYTYPE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXYTYPE", param_in);
 
@@ -1275,8 +1408,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.proxytype = (curl_proxytype)arg;
     break;
+  }
 
   case CURLOPT_PROXY_TRANSFER_MODE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXY_TRANSFER_MODE", param_in);
 
@@ -1296,9 +1431,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       break;
     }
     break;
+  }
 #endif   /* CURL_DISABLE_PROXY */
 
   case CURLOPT_SOCKS5_AUTH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SOCKS5_AUTH", param_in);
 
@@ -1306,8 +1443,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     if(data->set.socks5auth & ~(CURLAUTH_BASIC | CURLAUTH_GSSAPI))
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
 #if defined(HAVE_GSSAPI) || defined(USE_WINDOWS_SSPI)
   case CURLOPT_SOCKS5_GSSAPI_NEC:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SOCKS5_GSSAPI_NEC", param_in);
 
@@ -1316,14 +1455,14 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.socks5_gssapi_nec = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 #endif
 
   case CURLOPT_SOCKS5_GSSAPI_SERVICE:
+  case CURLOPT_PROXY_SERVICE_NAME:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SOCKS5_GSSAPI_SERVICE", param_in);
-
-  case CURLOPT_PROXY_SERVICE_NAME:
-    char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_SERVICE_NAME", param_in);
 
     /*
@@ -1332,8 +1471,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_PROXY_SERVICE_NAME],
                             param_in);
     break;
+  }
 
   case CURLOPT_SERVICE_NAME:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SERVICE_NAME", param_in);
 
@@ -1343,8 +1484,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SERVICE_NAME],
                             param_in);
     break;
+  }
 
   case CURLOPT_HEADERDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_HEADERDATA", param_in);
 
@@ -1353,7 +1496,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.writeheader = (void *)param_in;
     break;
+  }
   case CURLOPT_ERRORBUFFER:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_ERRORBUFFER", param_in);
 
@@ -1363,7 +1508,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.errorbuffer = param_in;
     break;
+  }
   case CURLOPT_WRITEDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_WRITEDATA", param_in);
 
@@ -1373,7 +1520,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.out = param_in;
     break;
+  }
   case CURLOPT_FTPPORT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_FTPPORT", param_in);
 
@@ -1384,29 +1533,37 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
                             param_in);
     data->set.ftp_use_port = (data->set.str[STRING_FTPPORT]) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FTP_USE_EPRT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_USE_EPRT", param_in);
 
     data->set.ftp_use_eprt = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FTP_USE_EPSV:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_USE_EPSV", param_in);
 
     data->set.ftp_use_epsv = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FTP_USE_PRET:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_USE_PRET", param_in);
 
     data->set.ftp_use_pret = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FTP_SSL_CCC:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_SSL_CCC", param_in);
 
@@ -1415,8 +1572,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.ftp_ccc = (curl_ftpccc)arg;
     break;
+  }
 
   case CURLOPT_FTP_SKIP_PASV_IP:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTP_SKIP_PASV_IP", param_in);
 
@@ -1426,8 +1585,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ftp_skip_ip = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_READDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_READDATA", param_in);
 
@@ -1437,7 +1598,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.in_set = param_in;
     break;
+  }
   case CURLOPT_INFILESIZE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_INFILESIZE", param_in);
 
@@ -1450,20 +1613,23 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.filesize = arg;
     break;
+  }
   case CURLOPT_INFILESIZE_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_INFILESIZE_LARGE", param_in);
 
     /*
      * If known, this should inform curl about the file size of the
      * to-be-uploaded file.
      */
-    bigsize = param_in;
-    if(bigsize < -1)
+    if(param_in < -1)
       return CURLE_BAD_FUNCTION_ARGUMENT;
-    data->set.filesize = bigsize;
+    data->set.filesize = param_in;
     break;
+  }
   case CURLOPT_LOW_SPEED_LIMIT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_LOW_SPEED_LIMIT", param_in);
 
@@ -1476,33 +1642,37 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.low_speed_limit = arg;
     break;
+  }
   case CURLOPT_MAX_SEND_SPEED_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_MAX_SEND_SPEED_LARGE", param_in);
 
     /*
      * When transfer uploads are faster then CURLOPT_MAX_SEND_SPEED_LARGE
      * bytes per second the transfer is throttled..
      */
-    bigsize = param_in;
-    if(bigsize < 0)
+    if(param_in < 0)
       return CURLE_BAD_FUNCTION_ARGUMENT;
-    data->set.max_send_speed = bigsize;
+    data->set.max_send_speed = param_in;
     break;
+  }
   case CURLOPT_MAX_RECV_SPEED_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_MAX_RECV_SPEED_LARGE", param_in);
 
     /*
      * When receiving data faster than CURLOPT_MAX_RECV_SPEED_LARGE bytes per
      * second the transfer is throttled..
      */
-    bigsize = param_in;
-    if(bigsize < 0)
+    if(param_in < 0)
       return CURLE_BAD_FUNCTION_ARGUMENT;
-    data->set.max_recv_speed = bigsize;
+    data->set.max_recv_speed = param_in;
     break;
+  }
   case CURLOPT_LOW_SPEED_TIME:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_LOW_SPEED_TIME", param_in);
 
@@ -1515,7 +1685,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.low_speed_time = arg;
     break;
+  }
   case CURLOPT_URL:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_URL", param_in);
 
@@ -1531,7 +1703,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
                             param_in);
     data->change.url = data->set.str[STRING_SET_URL];
     break;
+  }
   case CURLOPT_PORT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PORT", param_in);
 
@@ -1543,7 +1717,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.use_port = arg;
     break;
+  }
   case CURLOPT_TIMEOUT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TIMEOUT", param_in);
 
@@ -1557,8 +1733,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       return CURLE_BAD_FUNCTION_ARGUMENT;
     break;
+  }
 
   case CURLOPT_TIMEOUT_MS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TIMEOUT_MS", param_in);
 
@@ -1567,8 +1745,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.timeout = arg;
     break;
+  }
 
   case CURLOPT_CONNECTTIMEOUT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_CONNECTTIMEOUT", param_in);
 
@@ -1581,8 +1761,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       return CURLE_BAD_FUNCTION_ARGUMENT;
     break;
+  }
 
   case CURLOPT_CONNECTTIMEOUT_MS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_CONNECTTIMEOUT_MS", param_in);
 
@@ -1591,8 +1773,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.connecttimeout = arg;
     break;
+  }
 
   case CURLOPT_ACCEPTTIMEOUT_MS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_ACCEPTTIMEOUT_MS", param_in);
 
@@ -1604,8 +1788,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.accepttimeout = arg;
     break;
+  }
 
   case CURLOPT_USERPWD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_USERPWD", param_in);
 
@@ -1616,8 +1802,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
                                &data->set.str[STRING_USERNAME],
                                &data->set.str[STRING_PASSWORD]);
     break;
+  }
 
   case CURLOPT_USERNAME:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_USERNAME", param_in);
 
@@ -1627,8 +1815,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_USERNAME],
                             param_in);
     break;
+  }
 
   case CURLOPT_PASSWORD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PASSWORD", param_in);
 
@@ -1638,8 +1828,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_PASSWORD],
                             param_in);
     break;
+  }
 
   case CURLOPT_LOGIN_OPTIONS:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_LOGIN_OPTIONS", param_in);
 
@@ -1649,8 +1841,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_OPTIONS],
                             param_in);
     break;
+  }
 
   case CURLOPT_XOAUTH2_BEARER:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_XOAUTH2_BEARER", param_in);
 
@@ -1660,8 +1854,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_BEARER],
                             param_in);
     break;
+  }
 
   case CURLOPT_POSTQUOTE:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_POSTQUOTE", param_in);
 
@@ -1670,7 +1866,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.postquote = param_in;
     break;
+  }
   case CURLOPT_PREQUOTE:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_PREQUOTE", param_in);
 
@@ -1679,7 +1877,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.prequote = param_in;
     break;
+  }
   case CURLOPT_QUOTE:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_QUOTE", param_in);
 
@@ -1688,7 +1888,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.quote = param_in;
     break;
+  }
   case CURLOPT_RESOLVE:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_RESOLVE", param_in);
 
@@ -1705,7 +1907,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.resolve = param_in;
     data->change.resolve = data->set.resolve;
     break;
+  }
   case CURLOPT_PROGRESSFUNCTION:
+  {
     curl_progress_callback param_in = va_arg(param, curl_progress_callback);
     debugPrintObj(data, "CURLOPT_PROGRESSFUNCTION", param_in);
 
@@ -1718,8 +1922,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->progress.callback = FALSE; /* NULL enforces internal */
     break;
+  }
 
   case CURLOPT_XFERINFOFUNCTION:
+  {
     curl_xferinfo_callback param_in = va_arg(param, curl_xferinfo_callback);
     debugPrintObj(data, "CURLOPT_XFERINFOFUNCTION", param_in);
 
@@ -1733,8 +1939,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       data->progress.callback = FALSE; /* NULL enforces internal */
 
     break;
+  }
 
   case CURLOPT_PROGRESSDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_PROGRESSDATA", param_in);
 
@@ -1743,9 +1951,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.progress_client = param_in;
     break;
+  }
 
 #ifndef CURL_DISABLE_PROXY
   case CURLOPT_PROXYUSERPWD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXYUSERPWD", param_in);
 
@@ -1756,7 +1966,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
                                &data->set.str[STRING_PROXYUSERNAME],
                                &data->set.str[STRING_PROXYPASSWORD]);
     break;
+  }
   case CURLOPT_PROXYUSERNAME:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXYUSERNAME", param_in);
 
@@ -1766,7 +1978,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_PROXYUSERNAME],
                             param_in);
     break;
+  }
   case CURLOPT_PROXYPASSWORD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXYPASSWORD", param_in);
 
@@ -1776,7 +1990,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_PROXYPASSWORD],
                             param_in);
     break;
+  }
   case CURLOPT_NOPROXY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_NOPROXY", param_in);
 
@@ -1786,9 +2002,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_NOPROXY],
                             param_in);
     break;
+  }
 #endif
 
   case CURLOPT_RANGE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_RANGE", param_in);
 
@@ -1798,7 +2016,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SET_RANGE],
                             param_in);
     break;
+  }
   case CURLOPT_RESUME_FROM:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_RESUME_FROM", param_in);
 
@@ -1810,19 +2030,22 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.set_resume_from = arg;
     break;
+  }
   case CURLOPT_RESUME_FROM_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_RESUME_FROM_LARGE", param_in);
 
     /*
      * Resume transfer at the given file position
      */
-    bigsize = param_in;
-    if(bigsize < -1)
+    if(param_in < -1)
       return CURLE_BAD_FUNCTION_ARGUMENT;
-    data->set.set_resume_from = bigsize;
+    data->set.set_resume_from = param_in;
     break;
+  }
   case CURLOPT_DEBUGFUNCTION:
+  {
     curl_debug_callback param_in = va_arg(param, curl_debug_callback);
     debugPrintObj(data, "CURLOPT_DEBUGFUNCTION", param_in);
 
@@ -1834,7 +2057,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      * if the callback provided is NULL, it'll use the default callback
      */
     break;
+  }
   case CURLOPT_DEBUGDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_DEBUGDATA", param_in);
 
@@ -1844,7 +2069,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.debugdata = param_in;
     break;
+  }
   case CURLOPT_STDERR:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_STDERR", param_in);
 
@@ -1856,7 +2083,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     if(!data->set.err)
       data->set.err = stderr;
     break;
+  }
   case CURLOPT_HEADERFUNCTION:
+  {
     curl_write_callback param_in = va_arg(param, curl_write_callback);
     debugPrintObj(data, "CURLOPT_HEADERFUNCTION", param_in);
 
@@ -1865,7 +2094,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.fwrite_header = param_in;
     break;
+  }
   case CURLOPT_WRITEFUNCTION:
+  {
     curl_write_callback param_in = va_arg(param, curl_write_callback);
     debugPrintObj(data, "CURLOPT_WRITEFUNCTION", param_in);
 
@@ -1881,7 +2112,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->set.is_fwrite_set = 1;
     break;
+  }
   case CURLOPT_READFUNCTION:
+  {
     curl_read_callback param_in = va_arg(param, curl_read_callback);
     debugPrintObj(data, "CURLOPT_READFUNCTION", param_in);
 
@@ -1897,7 +2130,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->set.is_fread_set = 1;
     break;
+  }
   case CURLOPT_SEEKFUNCTION:
+  {
     curl_seek_callback param_in = va_arg(param, curl_seek_callback);
     debugPrintObj(data, "CURLOPT_SEEKFUNCTION", param_in);
 
@@ -1906,7 +2141,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.seek_func = param_in;
     break;
+  }
   case CURLOPT_SEEKDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_SEEKDATA", param_in);
 
@@ -1915,7 +2152,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.seek_client = param_in;
     break;
+  }
   case CURLOPT_CONV_FROM_NETWORK_FUNCTION:
+  {
     curl_conv_callback param_in = va_arg(param, curl_conv_callback);
     debugPrintObj(data, "CURLOPT_CONV_FROM_NETWORK_FUNCTION", param_in);
 
@@ -1924,7 +2163,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.convfromnetwork = param_in;
     break;
+  }
   case CURLOPT_CONV_TO_NETWORK_FUNCTION:
+  {
     curl_conv_callback param_in = va_arg(param, curl_conv_callback);
     debugPrintObj(data, "CURLOPT_CONV_TO_NETWORK_FUNCTION", param_in);
 
@@ -1933,7 +2174,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.convtonetwork = param_in;
     break;
+  }
   case CURLOPT_CONV_FROM_UTF8_FUNCTION:
+  {
     curl_conv_callback param_in = va_arg(param, curl_conv_callback);
     debugPrintObj(data, "CURLOPT_CONV_FROM_UTF8_FUNCTION", param_in);
 
@@ -1942,7 +2185,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.convfromutf8 = param_in;
     break;
+  }
   case CURLOPT_IOCTLFUNCTION:
+  {
     curl_ioctl_callback param_in = va_arg(param, curl_ioctl_callback);
     debugPrintObj(data, "CURLOPT_IOCTLFUNCTION", param_in);
 
@@ -1951,7 +2196,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ioctl_func = param_in;
     break;
+  }
   case CURLOPT_IOCTLDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_IOCTLDATA", param_in);
 
@@ -1960,7 +2207,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ioctl_client = param_in;
     break;
+  }
   case CURLOPT_SSLCERT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSLCERT", param_in);
 
@@ -1970,7 +2219,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_CERT_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_SSLCERT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_SSLCERT", param_in);
 
@@ -1980,7 +2231,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_CERT_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_SSLCERTTYPE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSLCERTTYPE", param_in);
 
@@ -1990,7 +2243,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_CERT_TYPE_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_SSLCERTTYPE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_SSLCERTTYPE", param_in);
 
@@ -2000,7 +2255,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_CERT_TYPE_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_SSLKEY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSLKEY", param_in);
 
@@ -2010,7 +2267,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_KEY_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_SSLKEY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_SSLKEY", param_in);
 
@@ -2020,7 +2279,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_KEY_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_SSLKEYTYPE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSLKEYTYPE", param_in);
 
@@ -2030,7 +2291,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_KEY_TYPE_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_SSLKEYTYPE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_SSLKEYTYPE", param_in);
 
@@ -2040,7 +2303,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_KEY_TYPE_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_KEYPASSWD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_KEYPASSWD", param_in);
 
@@ -2050,7 +2315,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_KEY_PASSWD_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_KEYPASSWD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_KEYPASSWD", param_in);
 
@@ -2060,7 +2327,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_KEY_PASSWD_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_SSLENGINE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSLENGINE", param_in);
 
@@ -2071,8 +2340,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     if(argptr && argptr[0])
       result = Curl_ssl_set_engine(data, argptr);
     break;
+  }
 
   case CURLOPT_SSLENGINE_DEFAULT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSLENGINE_DEFAULT", param_in);
 
@@ -2081,7 +2352,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     result = Curl_ssl_set_engine_default(data);
     break;
+  }
   case CURLOPT_CRLF:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_CRLF", param_in);
 
@@ -2090,8 +2363,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.crlf = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_HAPROXYPROTOCOL:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HAPROXYPROTOCOL", param_in);
 
@@ -2100,8 +2375,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.haproxyprotocol = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_INTERFACE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_INTERFACE", param_in);
 
@@ -2112,7 +2389,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_DEVICE],
                             param_in);
     break;
+  }
   case CURLOPT_LOCALPORT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_LOCALPORT", param_in);
 
@@ -2124,7 +2403,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.localport = curlx_sltous(arg);
     break;
+  }
   case CURLOPT_LOCALPORTRANGE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_LOCALPORTRANGE", param_in);
 
@@ -2136,7 +2417,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.localportrange = curlx_sltosi(arg);
     break;
+  }
   case CURLOPT_KRBLEVEL:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_KRBLEVEL", param_in);
 
@@ -2147,7 +2430,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
                             param_in);
     data->set.krb = (data->set.str[STRING_KRB_LEVEL]) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_GSSAPI_DELEGATION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_GSSAPI_DELEGATION", param_in);
 
@@ -2159,7 +2444,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.gssapi_delegation = arg;
     break;
+  }
   case CURLOPT_SSL_VERIFYPEER:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_VERIFYPEER", param_in);
 
@@ -2175,7 +2462,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
         data->set.ssl.primary.verifypeer;
     }
     break;
+  }
   case CURLOPT_PROXY_SSL_VERIFYPEER:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXY_SSL_VERIFYPEER", param_in);
 
@@ -2191,7 +2480,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
         data->set.proxy_ssl.primary.verifypeer;
     }
     break;
+  }
   case CURLOPT_SSL_VERIFYHOST:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_VERIFYHOST", param_in);
 
@@ -2218,7 +2509,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
         data->set.ssl.primary.verifyhost;
     }
     break;
+  }
   case CURLOPT_PROXY_SSL_VERIFYHOST:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXY_SSL_VERIFYHOST", param_in);
 
@@ -2245,7 +2538,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
         data->set.proxy_ssl.primary.verifyhost;
     }
     break;
+  }
   case CURLOPT_SSL_VERIFYSTATUS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_VERIFYSTATUS", param_in);
 
@@ -2266,7 +2561,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
         data->set.ssl.primary.verifystatus;
     }
     break;
+  }
   case CURLOPT_SSL_CTX_FUNCTION:
+  {
     curl_ssl_ctx_callback param_in = va_arg(param, curl_ssl_ctx_callback);
     debugPrintObj(data, "CURLOPT_SSL_CTX_FUNCTION", param_in);
 
@@ -2280,7 +2577,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_SSL_CTX_DATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_SSL_CTX_DATA", param_in);
 
@@ -2294,7 +2593,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_SSL_FALSESTART:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_FALSESTART", param_in);
 
@@ -2308,7 +2609,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 
     data->set.ssl.falsestart = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_CERTINFO:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_CERTINFO", param_in);
 
@@ -2319,7 +2622,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
         break;
+  }
   case CURLOPT_PINNEDPUBLICKEY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PINNEDPUBLICKEY", param_in);
 
@@ -2335,7 +2640,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_PROXY_PINNEDPUBLICKEY:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_PINNEDPUBLICKEY", param_in);
 
@@ -2351,7 +2658,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_CAINFO:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_CAINFO", param_in);
 
@@ -2361,7 +2670,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_CAFILE_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_CAINFO:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_CAINFO", param_in);
 
@@ -2372,7 +2683,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_CAFILE_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_CAPATH:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_CAPATH", param_in);
 
@@ -2389,7 +2702,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_PROXY_CAPATH:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_CAPATH", param_in);
 
@@ -2406,7 +2721,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
       result = CURLE_NOT_BUILT_IN;
     break;
+  }
   case CURLOPT_CRLFILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_CRLFILE", param_in);
 
@@ -2417,7 +2734,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_CRLFILE_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_PROXY_CRLFILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_CRLFILE", param_in);
 
@@ -2428,7 +2747,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_CRLFILE_PROXY],
                             param_in);
     break;
+  }
   case CURLOPT_ISSUERCERT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_ISSUERCERT", param_in);
 
@@ -2439,7 +2760,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSL_ISSUERCERT_ORIG],
                             param_in);
     break;
+  }
   case CURLOPT_TELNETOPTIONS:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_TELNETOPTIONS", param_in);
 
@@ -2448,8 +2771,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.telnet_options = param_in;
     break;
+  }
 
   case CURLOPT_BUFFERSIZE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_BUFFERSIZE", param_in);
 
@@ -2479,8 +2804,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.buffer_size = arg;
 
     break;
+  }
 
   case CURLOPT_NOSIGNAL:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_NOSIGNAL", param_in);
 
@@ -2490,8 +2817,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.no_signal = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_SHARE:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_SHARE", param_in);
 
@@ -2563,8 +2892,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      * it will be done by curl_easy_perform */
   }
   break;
+  }
 
   case CURLOPT_PRIVATE:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_PRIVATE", param_in);
 
@@ -2573,8 +2904,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.private_data = param_in;
     break;
+  }
 
   case CURLOPT_MAXFILESIZE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_MAXFILESIZE", param_in);
 
@@ -2586,9 +2919,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.max_filesize = arg;
     break;
+  }
 
 #ifdef USE_SSL
   case CURLOPT_USE_SSL:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_USE_SSL", param_in);
 
@@ -2600,8 +2935,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.use_ssl = (curl_usessl)arg;
     break;
+  }
 
   case CURLOPT_SSL_OPTIONS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_OPTIONS", param_in);
 
@@ -2609,8 +2946,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.ssl.enable_beast = arg&CURLSSLOPT_ALLOW_BEAST?TRUE:FALSE;
     data->set.ssl.no_revoke = !!(arg & CURLSSLOPT_NO_REVOKE);
     break;
+  }
 
   case CURLOPT_PROXY_SSL_OPTIONS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROXY_SSL_OPTIONS", param_in);
 
@@ -2618,9 +2957,11 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     data->set.proxy_ssl.enable_beast = arg&CURLSSLOPT_ALLOW_BEAST?TRUE:FALSE;
     data->set.proxy_ssl.no_revoke = !!(arg & CURLSSLOPT_NO_REVOKE);
     break;
+  }
 
 #endif
   case CURLOPT_FTPSSLAUTH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_FTPSSLAUTH", param_in);
 
@@ -2632,8 +2973,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.ftpsslauth = (curl_ftpauth)arg;
     break;
+  }
 
   case CURLOPT_IPRESOLVE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_IPRESOLVE", param_in);
 
@@ -2642,21 +2985,24 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.ipver = arg;
     break;
+  }
 
   case CURLOPT_MAXFILESIZE_LARGE:
-    curl_off_t param_in = va_arg(param, func);
+  {
+    curl_off_t param_in = va_arg(param, curl_off_t);
     debugPrintOffT(data, "CURLOPT_MAXFILESIZE_LARGE", param_in);
 
     /*
      * Set the maximum size of a file to download.
      */
-    bigsize = param_in;
-    if(bigsize < 0)
+    if(param_in < 0)
       return CURLE_BAD_FUNCTION_ARGUMENT;
-    data->set.max_filesize = bigsize;
+    data->set.max_filesize = param_in;
     break;
+  }
 
   case CURLOPT_TCP_NODELAY:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TCP_NODELAY", param_in);
 
@@ -2666,23 +3012,29 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.tcp_nodelay = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FTP_ACCOUNT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_FTP_ACCOUNT", param_in);
 
     result = Curl_setstropt(&data->set.str[STRING_FTP_ACCOUNT],
                             param_in);
     break;
+  }
 
   case CURLOPT_IGNORE_CONTENT_LENGTH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_IGNORE_CONTENT_LENGTH", param_in);
 
     data->set.ignorecl = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_CONNECT_ONLY:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_CONNECT_ONLY", param_in);
 
@@ -2691,16 +3043,20 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.connect_only = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_FTP_ALTERNATIVE_TO_USER:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_FTP_ALTERNATIVE_TO_USER", param_in);
 
     result = Curl_setstropt(&data->set.str[STRING_FTP_ALTERNATIVE_TO_USER],
                             param_in);
     break;
+  }
 
   case CURLOPT_SOCKOPTFUNCTION:
+  {
     curl_sockopt_callback param_in = va_arg(param, curl_sockopt_callback);
     debugPrintObj(data, "CURLOPT_SOCKOPTFUNCTION", param_in);
 
@@ -2709,8 +3065,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.fsockopt = param_in;
     break;
+  }
 
   case CURLOPT_SOCKOPTDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_SOCKOPTDATA", param_in);
 
@@ -2719,8 +3077,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.sockopt_client = param_in;
     break;
+  }
 
   case CURLOPT_OPENSOCKETFUNCTION:
+  {
     curl_opensocket_callback param_in = va_arg(param, curl_opensocket_callback);
     debugPrintObj(data, "CURLOPT_OPENSOCKETFUNCTION", param_in);
 
@@ -2730,8 +3090,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.fopensocket = param_in;
     break;
+  }
 
   case CURLOPT_OPENSOCKETDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_OPENSOCKETDATA", param_in);
 
@@ -2740,8 +3102,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.opensocket_client = param_in;
     break;
+  }
 
   case CURLOPT_CLOSESOCKETFUNCTION:
+  {
     curl_closesocket_callback param_in = va_arg(param, curl_closesocket_callback);
     debugPrintObj(data, "CURLOPT_CLOSESOCKETFUNCTION", param_in);
 
@@ -2751,8 +3115,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.fclosesocket = param_in;
     break;
+  }
 
   case CURLOPT_RESOLVER_START_FUNCTION:
+  {
     curl_resolver_start_callback param_in = va_arg(param, curl_resolver_start_callback);
     debugPrintObj(data, "CURLOPT_RESOLVER_START_FUNCTION", param_in);
 
@@ -2762,8 +3128,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.resolver_start = param_in;
     break;
+  }
 
   case CURLOPT_RESOLVER_START_DATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_RESOLVER_START_DATA", param_in);
 
@@ -2772,8 +3140,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.resolver_start_client = param_in;
     break;
+  }
 
   case CURLOPT_CLOSESOCKETDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_CLOSESOCKETDATA", param_in);
 
@@ -2782,8 +3152,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.closesocket_client = param_in;
     break;
+  }
 
   case CURLOPT_SSL_SESSIONID_CACHE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_SESSIONID_CACHE", param_in);
 
@@ -2791,17 +3163,21 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       TRUE : FALSE;
     data->set.proxy_ssl.primary.sessionid = data->set.ssl.primary.sessionid;
     break;
+  }
 
 #if defined(USE_LIBSSH2) || defined(USE_LIBSSH)
     /* we only include SSH options if explicitly built to support SSH */
   case CURLOPT_SSH_AUTH_TYPES:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSH_AUTH_TYPES", param_in);
 
     data->set.ssh_auth_types = param_in;
     break;
+  }
 
   case CURLOPT_SSH_PUBLIC_KEYFILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSH_PUBLIC_KEYFILE", param_in);
 
@@ -2811,8 +3187,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSH_PUBLIC_KEY],
                             param_in);
     break;
+  }
 
   case CURLOPT_SSH_PRIVATE_KEYFILE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSH_PRIVATE_KEYFILE", param_in);
 
@@ -2822,7 +3200,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSH_PRIVATE_KEY],
                             param_in);
     break;
+  }
   case CURLOPT_SSH_HOST_PUBLIC_KEY_MD5:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSH_HOST_PUBLIC_KEY_MD5", param_in);
 
@@ -2833,8 +3213,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSH_HOST_PUBLIC_KEY_MD5],
                             param_in);
     break;
+  }
 #ifdef HAVE_LIBSSH2_KNOWNHOST_API
   case CURLOPT_SSH_KNOWNHOSTS:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_SSH_KNOWNHOSTS", param_in);
 
@@ -2844,8 +3226,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_SSH_KNOWNHOSTS],
                             param_in);
     break;
+  }
 
   case CURLOPT_SSH_KEYFUNCTION:
+  {
     curl_sshkeycallback param_in = va_arg(param, curl_sshkeycallback);
     debugPrintObj(data, "CURLOPT_SSH_KEYFUNCTION", param_in);
 
@@ -2853,8 +3237,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
        then rever to use the internal default */
     data->set.ssh_keyfunc = param_in;
     break;
+  }
 
   case CURLOPT_SSH_KEYDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_SSH_KEYDATA", param_in);
 
@@ -2863,10 +3249,12 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ssh_keyfunc_userp = param_in;
     break;
+  }
 #endif /* HAVE_LIBSSH2_KNOWNHOST_API */
 #endif /* USE_LIBSSH2 */
 
   case CURLOPT_HTTP_TRANSFER_DECODING:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HTTP_TRANSFER_DECODING", param_in);
 
@@ -2875,8 +3263,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.http_te_skip = (0 == param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_HTTP_CONTENT_DECODING:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HTTP_CONTENT_DECODING", param_in);
 
@@ -2885,8 +3275,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.http_ce_skip = (0 == param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_NEW_FILE_PERMS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_NEW_FILE_PERMS", param_in);
 
@@ -2898,8 +3290,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.new_file_perms = arg;
     break;
+  }
 
   case CURLOPT_NEW_DIRECTORY_PERMS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_NEW_DIRECTORY_PERMS", param_in);
 
@@ -2911,8 +3305,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.new_directory_perms = arg;
     break;
+  }
 
   case CURLOPT_ADDRESS_SCOPE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_ADDRESS_SCOPE", param_in);
 
@@ -2926,8 +3322,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.scope_id = curlx_sltoui(arg);
     break;
+  }
 
   case CURLOPT_PROTOCOLS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PROTOCOLS", param_in);
 
@@ -2937,8 +3335,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
        with. Defaults to CURLPROTO_ALL. */
     data->set.allowed_protocols = param_in;
     break;
+  }
 
   case CURLOPT_REDIR_PROTOCOLS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_REDIR_PROTOCOLS", param_in);
 
@@ -2948,8 +3348,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
        to all protocols except FILE and SCP. */
     data->set.redir_protocols = param_in;
     break;
+  }
 
   case CURLOPT_DEFAULT_PROTOCOL:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_DEFAULT_PROTOCOL", param_in);
 
@@ -2957,8 +3359,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_DEFAULT_PROTOCOL],
                             param_in);
     break;
+  }
 
   case CURLOPT_MAIL_FROM:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_MAIL_FROM", param_in);
 
@@ -2966,8 +3370,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_MAIL_FROM],
                             param_in);
     break;
+  }
 
   case CURLOPT_MAIL_AUTH:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_MAIL_AUTH", param_in);
 
@@ -2975,28 +3381,33 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_MAIL_AUTH],
                             param_in);
     break;
+  }
 
   case CURLOPT_MAIL_RCPT:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_MAIL_RCPT", param_in);
 
     /* Set the list of mail recipients */
     data->set.mail_rcpt = param_in;
     break;
+  }
 
   case CURLOPT_SASL_IR:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SASL_IR", param_in);
 
     /* Enable/disable SASL initial response */
     data->set.sasl_ir = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
   case CURLOPT_RTSP_REQUEST:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_RTSP_REQUEST", param_in);
 
-  {
     /*
      * Set the RTSP request method (OPTIONS, SETUP, PLAY, etc...)
      * Would this be better if the RTSPREQ_* were just moved into here?
@@ -3007,43 +3418,33 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     case CURL_RTSPREQ_OPTIONS:
       rtspreq = RTSPREQ_OPTIONS;
       break;
-
     case CURL_RTSPREQ_DESCRIBE:
       rtspreq = RTSPREQ_DESCRIBE;
       break;
-
     case CURL_RTSPREQ_ANNOUNCE:
       rtspreq = RTSPREQ_ANNOUNCE;
       break;
-
     case CURL_RTSPREQ_SETUP:
       rtspreq = RTSPREQ_SETUP;
       break;
-
     case CURL_RTSPREQ_PLAY:
       rtspreq = RTSPREQ_PLAY;
       break;
-
     case CURL_RTSPREQ_PAUSE:
       rtspreq = RTSPREQ_PAUSE;
       break;
-
     case CURL_RTSPREQ_TEARDOWN:
       rtspreq = RTSPREQ_TEARDOWN;
       break;
-
-    case CURL_RTSPREQ_GET_PARAMETER:
+     case CURL_RTSPREQ_GET_PARAMETER:
       rtspreq = RTSPREQ_GET_PARAMETER;
       break;
-
     case CURL_RTSPREQ_SET_PARAMETER:
       rtspreq = RTSPREQ_SET_PARAMETER;
       break;
-
     case CURL_RTSPREQ_RECORD:
       rtspreq = RTSPREQ_RECORD;
       break;
-
     case CURL_RTSPREQ_RECEIVE:
       rtspreq = RTSPREQ_RECEIVE;
       break;
@@ -3057,6 +3458,7 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 
 
   case CURLOPT_RTSP_SESSION_ID:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_RTSP_SESSION_ID", param_in);
 
@@ -3067,8 +3469,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_RTSP_SESSION_ID],
                             param_in);
     break;
+  }
 
   case CURLOPT_RTSP_STREAM_URI:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_RTSP_STREAM_URI", param_in);
 
@@ -3079,8 +3483,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_RTSP_STREAM_URI],
                             param_in);
     break;
+  }
 
   case CURLOPT_RTSP_TRANSPORT:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_RTSP_TRANSPORT", param_in);
 
@@ -3090,8 +3496,10 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_RTSP_TRANSPORT],
                             param_in);
     break;
+  }
 
   case CURLOPT_RTSP_CLIENT_CSEQ:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_RTSP_CLIENT_CSEQ", param_in);
 
@@ -3102,67 +3510,87 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->state.rtsp_next_client_CSeq = param_in;
     break;
+  }
 
   case CURLOPT_RTSP_SERVER_CSEQ:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_RTSP_SERVER_CSEQ", param_in);
 
     /* Same as the above, but for server-initiated requests */
     data->state.rtsp_next_client_CSeq = param_in;
     break;
+  }
 
   case CURLOPT_INTERLEAVEDATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_INTERLEAVEDATA", param_in);
 
     data->set.rtp_out = param_in;
     break;
+  }
   case CURLOPT_INTERLEAVEFUNCTION:
+  {
     curl_write_callback param_in = va_arg(param, curl_write_callback);
     debugPrintObj(data, "CURLOPT_INTERLEAVEFUNCTION", param_in);
 
     /* Set the user defined RTP write function */
     data->set.fwrite_rtp = param_in;
     break;
+  }
 
   case CURLOPT_WILDCARDMATCH:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_WILDCARDMATCH", param_in);
 
     data->set.wildcard_enabled = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_CHUNK_BGN_FUNCTION:
+  {
     curl_chunk_bgn_callback param_in = va_arg(param, curl_chunk_bgn_callback);
     debugPrintObj(data, "CURLOPT_CHUNK_BGN_FUNCTION", param_in);
 
     data->set.chunk_bgn = param_in;
     break;
+  }
   case CURLOPT_CHUNK_END_FUNCTION:
+  {
     curl_chunk_end_callback param_in = va_arg(param, curl_chunk_end_callback);
     debugPrintObj(data, "CURLOPT_CHUNK_END_FUNCTION", param_in);
 
     data->set.chunk_end = param_in;
     break;
+  }
   case CURLOPT_FNMATCH_FUNCTION:
+  {
     curl_fnmatch_callback param_in = va_arg(param, curl_fnmatch_callback);
     debugPrintObj(data, "CURLOPT_FNMATCH_FUNCTION", param_in);
 
     data->set.fnmatch = param_in;
     break;
+  }
   case CURLOPT_CHUNK_DATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_CHUNK_DATA", param_in);
 
     data->wildcard.customptr = param_in;
     break;
+  }
   case CURLOPT_FNMATCH_DATA:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_FNMATCH_DATA", param_in);
 
     data->set.fnmatch_data = param_in;
     break;
+  }
 #ifdef USE_TLS_SRP
   case CURLOPT_TLSAUTH_USERNAME:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_TLSAUTH_USERNAME", param_in);
 
@@ -3171,7 +3599,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     if(data->set.str[STRING_TLSAUTH_USERNAME_ORIG] && !data->set.ssl.authtype)
       data->set.ssl.authtype = CURL_TLSAUTH_SRP; /* default to SRP */
     break;
+  }
   case CURLOPT_PROXY_TLSAUTH_USERNAME:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_TLSAUTH_USERNAME", param_in);
 
@@ -3181,7 +3611,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
        !data->set.proxy_ssl.authtype)
       data->set.proxy_ssl.authtype = CURL_TLSAUTH_SRP; /* default to SRP */
     break;
+  }
   case CURLOPT_TLSAUTH_PASSWORD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_TLSAUTH_PASSWORD", param_in);
 
@@ -3190,7 +3622,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     if(data->set.str[STRING_TLSAUTH_USERNAME_ORIG] && !data->set.ssl.authtype)
       data->set.ssl.authtype = CURL_TLSAUTH_SRP; /* default to SRP */
     break;
+  }
   case CURLOPT_PROXY_TLSAUTH_PASSWORD:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_TLSAUTH_PASSWORD", param_in);
 
@@ -3200,7 +3634,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
        !data->set.proxy_ssl.authtype)
       data->set.proxy_ssl.authtype = CURL_TLSAUTH_SRP; /* default to SRP */
     break;
+  }
   case CURLOPT_TLSAUTH_TYPE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_TLSAUTH_TYPE", param_in);
 
@@ -3211,7 +3647,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->set.ssl.authtype = CURL_TLSAUTH_NONE;
     break;
+  }
   case CURLOPT_PROXY_TLSAUTH_TYPE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_PROXY_TLSAUTH_TYPE", param_in);
 
@@ -3222,39 +3660,51 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     else
       data->set.proxy_ssl.authtype = CURL_TLSAUTH_NONE;
     break;
+  }
 #endif
   case CURLOPT_DNS_SERVERS:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_DNS_SERVERS", param_in);
 
     result = Curl_set_dns_servers(data, param_in);
     break;
+  }
   case CURLOPT_DNS_INTERFACE:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_DNS_INTERFACE", param_in);
 
     result = Curl_set_dns_interface(data, param_in);
     break;
+  }
   case CURLOPT_DNS_LOCAL_IP4:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_DNS_LOCAL_IP4", param_in);
 
     result = Curl_set_dns_local_ip4(data, param_in);
     break;
+  }
   case CURLOPT_DNS_LOCAL_IP6:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_DNS_LOCAL_IP6", param_in);
 
     result = Curl_set_dns_local_ip6(data, param_in);
     break;
+  }
 
   case CURLOPT_TCP_KEEPALIVE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TCP_KEEPALIVE", param_in);
 
     data->set.tcp_keepalive = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_TCP_KEEPIDLE:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TCP_KEEPIDLE", param_in);
 
@@ -3263,7 +3713,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.tcp_keepidle = arg;
     break;
+  }
   case CURLOPT_TCP_KEEPINTVL:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TCP_KEEPINTVL", param_in);
 
@@ -3272,7 +3724,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.tcp_keepintvl = arg;
     break;
+  }
   case CURLOPT_TCP_FASTOPEN:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_TCP_FASTOPEN", param_in);
 
@@ -3283,21 +3737,27 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = CURLE_NOT_BUILT_IN;
 #endif
     break;
+  }
   case CURLOPT_SSL_ENABLE_NPN:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_ENABLE_NPN", param_in);
 
     data->set.ssl_enable_npn = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_SSL_ENABLE_ALPN:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSL_ENABLE_ALPN", param_in);
 
     data->set.ssl_enable_alpn = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
 
 #ifdef USE_UNIX_SOCKETS
   case CURLOPT_UNIX_SOCKET_PATH:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_UNIX_SOCKET_PATH", param_in);
 
@@ -3305,7 +3765,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_UNIX_SOCKET_PATH],
                             param_in);
     break;
+  }
   case CURLOPT_ABSTRACT_UNIX_SOCKET:
+  {
     char* param_in = va_arg(param, char*);
     debugPrintStr(data, "CURLOPT_ABSTRACT_UNIX_SOCKET", param_in);
 
@@ -3313,41 +3775,45 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
     result = Curl_setstropt(&data->set.str[STRING_UNIX_SOCKET_PATH],
                             param_in);
     break;
+  }
 #endif
 
   case CURLOPT_PATH_AS_IS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PATH_AS_IS", param_in);
 
     data->set.path_as_is = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_PIPEWAIT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_PIPEWAIT", param_in);
 
     data->set.pipewait = (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   case CURLOPT_STREAM_WEIGHT:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_STREAM_WEIGHT", param_in);
 
 #ifndef USE_NGHTTP2
     return CURLE_NOT_BUILT_IN;
 #else
-    arg = param_in;
-    if((arg >= 1) && (arg <= 256))
-      data->set.stream_weight = (int)arg;
+    if((param_in >= 1) && (param_in <= 256))
+      data->set.stream_weight = (int)param_in;
     break;
 #endif
+  }
   case CURLOPT_STREAM_DEPENDS:
+  case CURLOPT_STREAM_DEPENDS_E:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_STREAM_DEPENDS", param_in);
-
-  case CURLOPT_STREAM_DEPENDS_E:
-    void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_STREAM_DEPENDS_E", param_in);
 
-  {
 #ifndef USE_NGHTTP2
     return CURLE_NOT_BUILT_IN;
 #else
@@ -3362,24 +3828,31 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
 #endif
   }
   case CURLOPT_CONNECT_TO:
+  {
     void* param_in = va_arg(param, void*);
     debugPrintObj(data, "CURLOPT_CONNECT_TO", param_in);
 
     data->set.connect_to = param_in;
     break;
+  }
   case CURLOPT_SUPPRESS_CONNECT_HEADERS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SUPPRESS_CONNECT_HEADERS", param_in);
 
     data->set.suppress_connect_headers = (0 != param_in)?TRUE:FALSE;
     break;
+  }
   case CURLOPT_SSH_COMPRESSION:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_SSH_COMPRESSION", param_in);
 
     data->set.ssh_compression = (0 != param_in)?TRUE:FALSE;
     break;
+  }
   case CURLOPT_HAPPY_EYEBALLS_TIMEOUT_MS:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_HAPPY_EYEBALLS_TIMEOUT_MS", param_in);
 
@@ -3388,19 +3861,24 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
       return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.happy_eyeballs_timeout = arg;
     break;
+  }
   case CURLOPT_DNS_SHUFFLE_ADDRESSES:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_DNS_SHUFFLE_ADDRESSES", param_in);
 
     data->set.dns_shuffle_addresses = (0 != param_in) ? TRUE:FALSE;
     break;
+  }
   case CURLOPT_DISALLOW_USERNAME_IN_URL:
+  {
     long param_in = va_arg(param, long);
     debugPrintLong(data, "CURLOPT_DISALLOW_USERNAME_IN_URL", param_in);
 
     data->set.disallow_username_in_url =
       (0 != param_in) ? TRUE : FALSE;
     break;
+  }
   default:
     /* unknown tag and its companion, just ignore: */
     result = CURLE_UNKNOWN_OPTION;
